@@ -13,7 +13,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const socket = new Socket('ws://localhost:3001/');
+    const location = window.location;
+    const isEncrypted = location.protocol === 'https:';
+    const protocol = isEncrypted ? 'wss:' : 'ws:';
+    const hostname = location.hostname;
+    const port = location.port ? `:${location.port}` : '';
+    const url = `${protocol}//${hostname}${port}/`;
+    const socket = new Socket(url);
     socket.on('open', () => {
       console.log('socket connected');
       // socket.send(new Int8Array(5));
