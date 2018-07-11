@@ -5,6 +5,6 @@ create table dream (
   title varchar(255)
 );
 
-insert into dream (title) values ('Compose a tune');
-insert into dream (title) values ('Visit Zaire');
-insert into dream (title) values ('Write a sci-fi novel');
+insert into dream (title) values ('Hear from you');
+insert into dream (title) values ('Learn the secret of life');
+insert into dream (title) values ('See the world');
