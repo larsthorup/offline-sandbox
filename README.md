@@ -37,6 +37,7 @@ Use two terminals:
 
     cd app
     npm start
+    # Note: connect on http://localhost:3001 to get websocket connection
 
 
 ## deploy
@@ -44,3 +45,4 @@ Use two terminals:
     cd server
     npm run build
     now
+    # Note: will use polling, not websocket, probably because of missing certificate configuration

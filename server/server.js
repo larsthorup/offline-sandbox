@@ -32,7 +32,7 @@ socketServer.on('connection', socket => {
   console.log('socket connected', socket.id);
   const intervalHandle = setInterval(() => {
     socket.send(new Date().toISOString());
-  }, 1000);
+  }, 10000);
   socket.on('message', data => {
     console.log('socket message', data);
   });
