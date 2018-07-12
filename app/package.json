@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "engine.io-client": "^3.2.1",
+    "engine.io-reconnect": "git+https://github.com/DreamworldSolutions/engine.io-reconnect.git",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4"

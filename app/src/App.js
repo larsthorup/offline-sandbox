@@ -1,40 +1,11 @@
-import {Socket} from 'engine.io-client';
 import React, { Component } from 'react';
 
 import logo from './logo.svg';
 import './App.css';
+import ConnectionStatus from './ConnectionStatus';
 import DreamList from './DreamList';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    const location = window.location;
-    const isEncrypted = location.protocol === 'https:';
-    const protocol = isEncrypted ? 'wss:' : 'ws:';
-    const hostname = location.hostname;
-    const port = location.port ? `:${location.port}` : '';
-    const url = `${protocol}//${hostname}${port}/`;
-    const socket = new Socket(url);
-    socket.on('open', () => {
-      console.log('socket connected');
-      // socket.send(new Int8Array(5));
-      socket.on('message', message => {
-        // console.log('socket message', blob);
-        this.setState({
-          serverMessage: message
-        });
-      });
-      socket.on('close', () => {
-        console.log('socket closed');
-      });
-    });
-  }
-
   render() {
     return (
       <div className="App">
@@ -46,7 +17,7 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         <DreamList />
-        <p>Server message: {this.state.serverMessage}</p>
+        <ConnectionStatus/>
       </div>
     );
   }
