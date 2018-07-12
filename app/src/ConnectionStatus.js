@@ -11,13 +11,7 @@ class ConnectionStatus extends Component {
   }
 
   componentDidMount() {
-    const location = window.location;
-    const isEncrypted = location.protocol === 'https:';
-    const protocol = isEncrypted ? 'wss:' : 'ws:';
-    const hostname = location.hostname;
-    const port = location.port ? `:${location.port}` : '';
-    const url = `${protocol}//${hostname}${port}/`;
-    const socket = new Socket(url);
+    const socket = new Socket(); // Note: will connect back to originating host and port
     const reconnector = reconnect(socket, {
       timeout: false
     });
