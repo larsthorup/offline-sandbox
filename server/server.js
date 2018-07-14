@@ -34,12 +34,12 @@ socketServer.on('connection', socket => {
   console.log('socket connected', socket.id);
   socket.on('message', data => {
     if (data === 'authToken') {
-      socket.send(JSON.stringify({channel: 'auth', payload: 'authorized'}));
+      socket.send(JSON.stringify({channel: 'auth', data: 'authorized'}));
       intervalHandle = setInterval(() => {
-        socket.send(JSON.stringify({channel: 'time', payload: new Date().toISOString()}));
+        socket.send(JSON.stringify({channel: 'time', data: new Date().toISOString()}));
       }, 10000);
     } else {
-      socket.send(JSON.stringify({channel: 'auth', message: 'not authorized'}))
+      socket.send(JSON.stringify({channel: 'auth', data: 'not authorized'}))
     }
   });
   socket.on('close', () => {
