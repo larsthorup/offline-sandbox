@@ -17,9 +17,8 @@ class ConnectionStatus extends Component {
     });
     socket.on('open', () => {
       this.log('connected');
-      // socket.send(new Int8Array(5));
+      socket.send('authToken');
       socket.on('message', message => {
-        // console.log('socket message', blob);
         this.log(message);
       });
       socket.on('close', () => {
@@ -28,6 +27,7 @@ class ConnectionStatus extends Component {
     });
     reconnector.on('reconnect', attemptCount => {
       this.log(`reconnected after ${attemptCount} attempts`);
+      socket.send('authToken');
     });
 
     reconnector.on('reconnecting', attemptCount => {

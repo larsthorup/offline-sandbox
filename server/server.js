@@ -29,15 +29,20 @@ const httpServer = app.listen(port, listeningHandler);
 const socketServer = socketEngine.Server();
 socketServer.attach(httpServer);
 socketServer.on('connection', socket => {
+  let intervalHandle;
   console.log('socket connected', socket.id);
-  const intervalHandle = setInterval(() => {
-    socket.send(new Date().toISOString());
-  }, 10000);
   socket.on('message', data => {
-    console.log('socket message', data);
+    if (data === 'authToken') {
+      socket.send('authorized')
+      intervalHandle = setInterval(() => {
+        socket.send(new Date().toISOString());
+      }, 10000);
+    } else {
+      socket.send('not authorized')
+    }
   });
   socket.on('close', () => {
-    clearInterval(intervalHandle)
+    if (intervalHandle) clearInterval(intervalHandle);
     console.log('socket closed');
   });
 });
