@@ -4,8 +4,23 @@ class DreamList extends Component {
   constructor() {
     super();
     this.state = {
-      dreamList: []
+      dreamSet: []
     };
+    this.dreamInput = React.createRef();
+  }
+
+  handleSubmit = event => {
+    const title = this.dreamInput.current.value;
+    fetch('/api/dream', {
+      method: 'POST',
+      body: JSON.stringify({title}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log('submit', title);
+    this.dreamInput.current.value = '';
+    event.preventDefault();
   }
 
   async componentDidMount() {
@@ -15,8 +30,8 @@ class DreamList extends Component {
     // const dreamFeed = fetchFeed('dream', {existing: {}, new: {}})
     // dreamFeed.on('data', dreamReceiver)
     const response = await fetch('/api/dreams');
-    const dreamList = await response.json();
-    this.setState({dreamList});
+    const dreamSet = await response.json();
+    this.setState({dreamSet});
   }
 
   async componentWillUnmount () {
@@ -28,10 +43,14 @@ class DreamList extends Component {
     <div className="DreamList">
       <h3>All my dreams</h3>
       <ul>
-      {this.state.dreamList.map(dream =>
-        <li key={dream}>{dream}</li>
+      {Object.keys(this.state.dreamSet).map(id =>
+        <li key={id}>{this.state.dreamSet[id].title}</li>
       )}
       </ul>
+      <form onSubmit={this.handleSubmit}>
+        <input type="text" ref={this.dreamInput} />
+        <input type="submit" value="Add dream!"/>
+      </form>
     </div>
     );
   }
