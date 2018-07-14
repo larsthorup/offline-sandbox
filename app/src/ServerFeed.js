@@ -55,6 +55,7 @@ class ServerFeed {
     });
     reconnector.on('reconnect', async attemptCount => {
       console.log(`reconnected after ${attemptCount} attempts`);
+      this.setConnected();
       await this.authenticating(this.token);
     });
     reconnector.on('reconnecting', attemptCount => {
@@ -67,7 +68,10 @@ class ServerFeed {
       console.log(`timeout after ${timeout}ms`);
     });
 
-    await new Promise(resolve => this.socket.on('open', resolve));
+    await new Promise(resolve => this.socket.on('open', () => {
+      this.setConnected();
+      resolve();
+    }));
     this.socket.on('close', () => {
       this.setDisconnected();
     });
@@ -75,12 +79,14 @@ class ServerFeed {
       const message = JSON.parse(json);
       this.notifying(message);
     });
-    this.setConnected();
   }
 
-  subscribe (channel) {
+  subscribe (channel, handler) {
     if (!channel) throw new Error('ServerFeed.subscribe(): missing channel')
     const feed = new ChannelFeed(channel);
+    if (handler) {
+      feed.on('data', handler);
+    }
     this.feedListByChannel[channel] = this.feedListByChannel[channel] || [];
     this.feedListByChannel[channel].push(feed);
     if (channel === 'connection') {
@@ -98,6 +104,7 @@ class ServerFeed {
 
   notifying ({channel, feed, data}) {
     if (feed) {
+      // console.log({channel, data})
       feed.emit(data)
     } else {
       const feedList = this.feedListByChannel[channel];
@@ -111,7 +118,7 @@ class ServerFeed {
     this.notifying({
       channel: 'connection',
       feed,
-      message: this.connectedStatus
+      data: this.connectedStatus
     });
   }
 }

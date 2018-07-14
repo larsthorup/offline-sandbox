@@ -37,7 +37,7 @@ socketServer.on('connection', socket => {
       socket.send(JSON.stringify({channel: 'auth', data: 'authorized'}));
       intervalHandle = setInterval(() => {
         socket.send(JSON.stringify({channel: 'time', data: new Date().toISOString()}));
-      }, 10000);
+      }, 5000);
     } else {
       socket.send(JSON.stringify({channel: 'auth', data: 'not authorized'}))
     }

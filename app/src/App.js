@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 
 import logo from './logo.svg';
 import './App.css';
+import AuthStatus from './AuthStatus';
 import ConnectionStatus from './ConnectionStatus';
 import DreamList from './DreamList';
+import ServerTime from './ServerTime';
 
-// ToDo: ServerTime
 class App extends Component {
   render() {
     return (
@@ -19,6 +20,8 @@ class App extends Component {
         </p>
         <DreamList />
         <ConnectionStatus/>
+        <AuthStatus/>
+        <ServerTime/>
       </div>
     );
   }

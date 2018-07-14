@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 
 import serverFeed from './ServerFeed';
 
-class ConnectionStatus extends Component {
+class AuthStatus extends Component {
   constructor() {
     super();
     this.state = {};
   }
 
   componentDidMount() {
-    const connectionFeed = serverFeed.subscribe('connection', message => this.log(message));
-    this.setState({connectionFeed});
+    const authFeed = serverFeed.subscribe('auth');
+    authFeed.on('data', message => this.log(message));
+    this.setState({authFeed});
   }
 
   componentWillUnmount () {
-    serverFeed.unsubscribe(this.connectionFeed);
+    serverFeed.unsubscribe(this.authFeed);
   }
 
   log(message) {
@@ -25,9 +26,9 @@ class ConnectionStatus extends Component {
 
   render() {
     return (
-      <div>Connection Status: {this.state.message}</div>
+      <div>Auth Status: {this.state.message}</div>
     );
   }
 }
 
-export default ConnectionStatus;
+export default AuthStatus;
