@@ -9,9 +9,18 @@ class DreamList extends Component {
   }
 
   async componentDidMount() {
+    // const dreamReceiver = dreamList => {
+    //   this.setState({dreamList: [].concat(this.deamList, dreamList));
+    // }
+    // const dreamFeed = fetchFeed('dream', {existing: {}, new: {}})
+    // dreamFeed.on('data', dreamReceiver)
     const response = await fetch('/api/dreams');
     const dreamList = await response.json();
     this.setState({dreamList});
+  }
+
+  async componentWillUnmount () {
+    // dreamFeed.close()
   }
 
   render() {

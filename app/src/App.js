@@ -5,6 +5,7 @@ import './App.css';
 import ConnectionStatus from './ConnectionStatus';
 import DreamList from './DreamList';
 
+// ToDo: ServerMessage
 class App extends Component {
   render() {
     return (

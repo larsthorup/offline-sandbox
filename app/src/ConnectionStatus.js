@@ -11,6 +11,7 @@ class ConnectionStatus extends Component {
   }
 
   componentDidMount() {
+    // ToDo: extract socket component
     const socket = new Socket(); // Note: will connect back to originating host and port
     const reconnector = reconnect(socket, {
       timeout: false
@@ -18,6 +19,7 @@ class ConnectionStatus extends Component {
     socket.on('open', () => {
       this.log('connected');
       socket.send('authToken');
+      // ToDo: serverMessageFeed
       socket.on('message', message => {
         this.log(message);
       });
