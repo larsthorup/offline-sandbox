@@ -1,12 +1,12 @@
-# engineio-sandbox
+# 
 
-Cloned from [js-fullstack-sandbox](https://github.com/larsthorup/js-fullstack-sandbox).
+Cloned from [engineio-sandbox](https://github.com/larsthorup/engineio-sandbox).
 
 
 ## initial setup
 
     # database
-    # configure a PostgreSQL instance, e.g. on elephantsql.com
+    # configure a PostgreSQL instance, e.g. on elephantsql.com or locally
     # create server/.env from .env-sample and set DATABASE 
 
     # hosting with zeit.co
