@@ -26,6 +26,7 @@ function listeningHandler () {
   console.log(`Server is listening on port ${port}`);
 }
 const httpServer = app.listen(port, listeningHandler);
+// ToDo: extract
 const socketServer = socketEngine.Server();
 socketServer.attach(httpServer);
 socketServer.on('connection', socket => {
@@ -33,12 +34,12 @@ socketServer.on('connection', socket => {
   console.log('socket connected', socket.id);
   socket.on('message', data => {
     if (data === 'authToken') {
-      socket.send('authorized')
+      socket.send(JSON.stringify({channel: 'auth', payload: 'authorized'}));
       intervalHandle = setInterval(() => {
-        socket.send(new Date().toISOString());
+        socket.send(JSON.stringify({channel: 'time', payload: new Date().toISOString()}));
       }, 10000);
     } else {
-      socket.send('not authorized')
+      socket.send(JSON.stringify({channel: 'auth', message: 'not authorized'}))
     }
   });
   socket.on('close', () => {

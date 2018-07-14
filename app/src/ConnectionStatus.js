@@ -20,8 +20,16 @@ class ConnectionStatus extends Component {
       this.log('connected');
       socket.send('authToken');
       // ToDo: serverMessageFeed
-      socket.on('message', message => {
-        this.log(message);
+      socket.on('message', json => {
+        const message = JSON.parse(json);
+        switch (message.channel) {
+          case 'auth':
+            this.log(message.payload);
+            break;
+          case 'time':
+            this.log(message.payload);
+            break;
+        }
       });
       socket.on('close', () => {
         this.log('disconnected');
@@ -54,7 +62,7 @@ class ConnectionStatus extends Component {
 
   render() {
     return (
-      <div>Server message: {this.state.message}</div>
+      <div>Connection Status: {this.state.message}</div>
     );
   }
 }
