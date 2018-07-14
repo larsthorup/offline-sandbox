@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import serverFeed from "./ServerFeed";
 
 class DreamList extends Component {
   constructor() {
@@ -32,10 +33,17 @@ class DreamList extends Component {
     const response = await fetch('/api/dreams');
     const dreamSet = await response.json();
     this.setState({dreamSet});
+    const dreamFeed = serverFeed.subscribe('dream', dream => {
+      console.log({dream})
+      this.setState({dreamSet: Object.assign({
+          [dream.id]: dream
+        }, this.state.dreamSet)});
+    });
+    this.setState({dreamFeed});
   }
 
   async componentWillUnmount () {
-    // dreamFeed.close()
+    serverFeed.unsubscribe(this.dreamFeed);
   }
 
   render() {
