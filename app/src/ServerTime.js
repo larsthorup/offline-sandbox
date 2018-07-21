@@ -6,22 +6,19 @@ class ServerTime extends Component {
   constructor() {
     super();
     this.state = {};
+    this.timeHandler = this.onTime.bind(this);
   }
 
   componentDidMount() {
-    const timeFeed = serverFeed.subscribe('time');
-    timeFeed.on('data', time => this.log(time));
-    this.setState({timeFeed});
+    serverFeed.on('time', this.timeHandler)
   }
 
   componentWillUnmount () {
-    serverFeed.unsubscribe(this.timeFeed);
+    serverFeed.removeListener(this.timeHandler);
   }
 
-  log(time) {
-    this.setState({
-      time: time
-    });
+  onTime({time}) {
+    this.setState({time});
   }
 
   render() {

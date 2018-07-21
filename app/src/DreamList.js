@@ -8,6 +8,7 @@ class DreamList extends Component {
       dreamSet: []
     };
     this.dreamInput = React.createRef();
+    this.dreamInsertedHandler = this.onDreamInserted.bind(this);
   }
 
   handleSubmit = event => {
@@ -34,17 +35,17 @@ class DreamList extends Component {
     const response = await fetch('/api/dreams');
     const dreamSet = await response.json();
     this.setState({dreamSet});
-    const dreamFeed = serverFeed.subscribe('dream', dream => {
-      console.log({dream})
-      this.setState({dreamSet: Object.assign({
-          [dream.id]: dream
-        }, this.state.dreamSet)});
-    });
-    this.setState({dreamFeed});
+    serverFeed.on('dream:inserted', this.dreamInsertedHandler);
   }
 
   async componentWillUnmount () {
-    serverFeed.unsubscribe(this.dreamFeed);
+    serverFeed.removeListener(this.dreamInsertedHandler);
+  }
+
+  onDreamInserted (dream) {
+    this.setState({dreamSet: Object.assign({
+      [dream.id]: dream
+    }, this.state.dreamSet)});
   }
 
   render() {

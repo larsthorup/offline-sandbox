@@ -9,10 +9,10 @@ insert into dream (title) values ('Feed on love');
 insert into dream (title) values ('Eat a varied diet');
 insert into dream (title) values ('Visit places');
 
-create function dream_insert_notify() returns trigger as $$
+create or replace function dream_insert_notify() returns trigger as $$
 declare
 begin
-  perform pg_notify('dream', row_to_json(new)::text);
+  perform pg_notify('dream:inserted', row_to_json(new)::text);
   return new;
 end;
 $$ language plpgsql;

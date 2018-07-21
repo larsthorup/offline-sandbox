@@ -1,39 +1,22 @@
 import reconnect from 'engine.io-reconnect';
 import eio from 'engine.io-client';
-
-class ChannelFeed {
-  constructor (channel) {
-    this.channel = channel;
-  }
-
-  on (event, handler) {
-    if (event !== 'data') throw new Error(`Invalid event in ChannelFeed.on(): "${event}"`);
-    this.handler = handler;
-  }
-
-  emit (data) {
-    const handler = this.handler;
-    if (handler) {
-      handler(data);
-    }
-  }
-}
+import EventEmitter from 'events';
 
 // ToDo: tests
-class ServerFeed {
+class ServerFeed extends EventEmitter {
   constructor () {
-    this.feedListByChannel = {};
+    super();
     this.setDisconnected();
   }
 
   setDisconnected () {
     this.connectedStatus = 'disconnected';
-    this.notifyingConnectedStatus({});
+    this.emitConnectedStatus();
   }
 
   setConnected () {
     this.connectedStatus = 'connected';
-    this.notifyingConnectedStatus({});
+    this.emitConnectedStatus();
   }
 
   async authenticating (token) {
@@ -77,49 +60,12 @@ class ServerFeed {
     });
     this.socket.on('message', json => {
       const message = JSON.parse(json);
-      this.notifying(message);
+      this.emit(message.channel, message.data);
     });
   }
 
-  subscribe (channel, handler) {
-    if (!channel) throw new Error('ServerFeed.subscribe(): missing channel')
-    const feed = new ChannelFeed(channel);
-    if (handler) {
-      feed.on('data', handler);
-    }
-    this.feedListByChannel[channel] = this.feedListByChannel[channel] || [];
-    this.feedListByChannel[channel].push(feed);
-    if (channel === 'connection') {
-      this.notifyingConnectedStatus({feed});
-    }
-    return feed;
-  }
-
-  unsubscribe (feed) {
-    if (!feed) return;
-    const channel = feed.channel;
-    if (!this.feedListByChannel[channel]) return;
-    this.feedListByChannel[channel] = this.feedListByChannel.filter(el => el !== feed);
-  }
-
-  notifying ({channel, feed, data}) {
-    if (feed) {
-      // console.log({channel, data})
-      feed.emit(data)
-    } else {
-      const feedList = this.feedListByChannel[channel];
-      if (feedList) for (feed of feedList) {
-        this.notifying({channel, feed, data});
-      }
-    }
-  }
-
-  notifyingConnectedStatus ({feed}) {
-    this.notifying({
-      channel: 'connection',
-      feed,
-      data: this.connectedStatus
-    });
+  emitConnectedStatus () {
+    this.emit('connection:status', {status: this.connectedStatus});
   }
 }
 

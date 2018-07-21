@@ -6,26 +6,24 @@ class ConnectionStatus extends Component {
   constructor() {
     super();
     this.state = {};
+    this.connectionStatusHandler = this.onConnectionStatus.bind(this);
   }
 
   componentDidMount() {
-    const connectionFeed = serverFeed.subscribe('connection', message => this.log(message));
-    this.setState({connectionFeed});
+    serverFeed.on('connection:status', this.connectionStatusHandler)
   }
 
   componentWillUnmount () {
-    serverFeed.unsubscribe(this.connectionFeed);
+    serverFeed.removeListener(this.connectionStatusHandler);
   }
 
-  log(message) {
-    this.setState({
-      message: message
-    });
+  onConnectionStatus({status}) {
+    this.setState({status});
   }
 
   render() {
     return (
-      <div>Connection Status: {this.state.message}</div>
+      <div>Connection Status: {this.state.status}</div>
     );
   }
 }

@@ -43,12 +43,12 @@ const httpServer = app.listen(port, listeningHandler);
 const clientList = ClientList.connect(httpServer);
 
 setInterval(() => {
-  clientList.notifyAll({channel: 'time', data: new Date().toISOString()});
+  clientList.notifyAll({channel: 'time', data: {time: new Date().toISOString()}});
 }, 5000);
 
 async function listenDb () {
   const dbNotify = await db.connect({direct: true}); // ToDo: onLost: onConnectionLost
-  const dreamChannel = 'dream';
+  const dreamChannel = 'dream:inserted';
   await dbNotify.none('listen $1~', dreamChannel);
   dbNotify.client.on('notification', data => {
     if (data.channel === dreamChannel) {

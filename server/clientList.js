@@ -14,9 +14,9 @@ class ClientList {
       socket.on('message', async data => {
         if (data === 'authToken') {
           this.socketSet[socket.id] = socket;
-          this.notify({channel: 'auth', data: 'authorized', socket});
+          this.notify({channel: 'auth:status', data: {isAuthorized: true}, socket});
         } else {
-          this.notify({channel: 'auth', data: 'not authorized', socket});
+          this.notify({channel: 'auth:status', data: {isAuthorized: false}, socket});
         }
       });
       socket.on('close', () => {

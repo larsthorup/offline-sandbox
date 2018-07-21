@@ -6,21 +6,21 @@ class AuthStatus extends Component {
   constructor() {
     super();
     this.state = {};
+    this.authStatusHandler = this.onAuthStatus.bind(this);
   }
 
   componentDidMount() {
-    const authFeed = serverFeed.subscribe('auth');
-    authFeed.on('data', message => this.log(message));
-    this.setState({authFeed});
+    serverFeed.on('auth:status', this.authStatusHandler)
   }
 
   componentWillUnmount () {
-    serverFeed.unsubscribe(this.authFeed);
+    serverFeed.removeListener(this.authStatusHandler);
   }
 
-  log(message) {
+  onAuthStatus({isAuthorized}) {
+    console.log({isAuthorized})
     this.setState({
-      message: message
+      message: `${isAuthorized ? '' : 'not '}authorized`
     });
   }
 
